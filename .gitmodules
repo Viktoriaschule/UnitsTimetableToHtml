@@ -1,0 +1,4 @@
+[submodule "src/server3"]
+	path = src/server3
+	url = https://github.com/VsaApp/Server3.git
+	branch = v2

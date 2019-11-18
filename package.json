@@ -1,0 +1,18 @@
+{
+  "name": "UnitsTimetableToHtml",
+  "version": "1.0.0",
+  "description": "Parses an Untis DIV-01 timetable to html",
+  "main": "src/index.ts",
+  "repository": "https://github.com/VsaApp/UnitsTimetableToHtml.git",
+  "author": "Finn <tupfi2@gmx.de>",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "start": "./node_modules/.bin/ts-node src/index.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^12.12.8",
+    "ts-node": "^8.5.2",
+    "typescript": "^3.7.2"
+  }
+}
