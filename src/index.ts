@@ -6,10 +6,10 @@ import { getSubject } from './server3/src/utils/subjects';
 
 console.log('Start parser');
 
-const ttFile = path.resolve(process.cwd(), 'timetable.txt');
+const ttFile = path.resolve(process.cwd(), 'unstf.txt');
 const htmlFile = path.resolve(process.cwd(), 'src', 'emptyHtml.html');
 if (!fs.existsSync(ttFile)) {
-    throw("Cannot find 'timetable.json'!");
+    throw ("Cannot find 'unstf.txt'!");
 }
 
 let raw: String;
@@ -32,7 +32,8 @@ let html = fs.readFileSync(htmlFile).toString();
 
 try {
     html = html.replace('Timetable', `Timetable ${json.date}`);
-    json.grades.forEach((timetable, grade) => {
+    Object.keys(json.grades).forEach((grade: string) => {
+        const timetable = json.grades[grade];
         html += `<table id="t01"><tr><th>${grade.toUpperCase()}</th>`;
         for (var i = 0; i < 5; i++) {
             html += `<th>${new Date(`11 ${18 + i} 2019`).toLocaleDateString('en-EN', { weekday: 'long' })}</th>`;
@@ -44,7 +45,6 @@ try {
                 if (timetable.data.days[j].units.length > i && timetable.data.days[j].units[i]) {
                     line[j] = timetable.data.days[j].units[i];
                 }
-                if (grade == '5b') console.log(i, j, timetable.data.days[j].units[i]);
             }
             if (line.filter((u) => u).length > 0) {
                 html += `<tr><td class="unit">${i + 1}</td>`;
