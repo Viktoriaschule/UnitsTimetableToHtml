@@ -1,8 +1,8 @@
-import fs, { exists } from 'fs';
+import fs from 'fs';
 import path from 'path';
 import { Timetables, Subject, Unit } from './server3/src/utils/interfaces';
 import { extractData } from './server3/src/timetable/tt_parser';
-import { getSubject } from './server3/src/utils/subjects';
+import { updateSubjects, getSubject } from './server3/src/subjects/subjects_butler';
 
 console.log('Start parser');
 
@@ -13,10 +13,10 @@ if (!fs.existsSync(ttFile)) {
 }
 
 let raw: String;
-let parsed: string[][];
+let parsed: string[];
 try {
     raw = fs.readFileSync(ttFile).toString();
-    parsed = raw.replace(/\"/g, '').split('\n').map((line) => line.split(','));
+    parsed = raw.replace(/\"/g, '').split('\n');
 } catch (_) {
     throw ("Failed to read json!\nIn 'timetable.json' must be the parsed timetable in the VsaApp/Server3 Timetables format!");
 }
@@ -24,8 +24,8 @@ try {
 let json: Timetables;
 try {
     json = extractData(parsed);
-} catch (_) {
-    throw ("Failed to parse json!\nThe 'timetable.json' must has hte format from VsaApp/Server3 Timetables!");
+} catch (e) {
+    throw ("Failed to parse json!\nThe 'timetable.json' must has hte format from VsaApp/Server3 Timetables!\n" + e);
 }
 
 let html = fs.readFileSync(htmlFile).toString();
@@ -54,19 +54,19 @@ try {
                     else {
                         html += `<td class="subjects">${unit.subjects.filter((s) => !s.subjectID.includes('Freistunde')).map((s) => {
                             const course = s.courseID.includes('|') ? '' : s.courseID.split('-')[1].toLocaleUpperCase();
-                            return `<b>${getSubject(s.subjectID)}</b> ${course} ${s.teacherID.toUpperCase().length > 0 ?`(${ s.teacherID.toUpperCase()})`
-                        : ''}`;
+                            return `<b>${s.subjectID}</b> ${course} ${s.teacherID.toUpperCase().length > 0 ? `(${s.teacherID.toUpperCase()})`
+                                : ''}`;
                         }).join('<br>')}</td>`;
                     }
                 }
                 html += '</tr>';
             }
         }
-        
+
         html += '</table><br>'
     });
 } catch (_) {
-    throw ("Failed to convert json!\nThe 'timetable.json' must has hte format from VsaApp/Server3 Timetables!");
+    throw ("Failed to convert json!\nThe 'timetable.json' must has the format from VsaApp/Server3 Timetables!");
 }
 
 html += '<body>';
