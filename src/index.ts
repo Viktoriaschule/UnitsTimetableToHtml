@@ -15,10 +15,10 @@ if (!fs.existsSync(ttFile)) {
 let raw: String;
 let parsed: string[];
 try {
-    raw = fs.readFileSync(ttFile).toString();
+    raw = fs.readFileSync(ttFile, 'latin1').toString();
     parsed = raw.replace(/\"/g, '').split('\n');
-} catch (_) {
-    throw ("Failed to read json!\nIn 'timetable.json' must be the parsed timetable in the VsaApp/Server3 Timetables format!");
+} catch (e) {
+    throw ("Failed to read json!\nIn 'timetable.json' must be the parsed timetable in the VsaApp/Server3 Timetables format!\n"+e);
 }
 
 let json: Timetables;
@@ -54,7 +54,7 @@ try {
                     else {
                         html += `<td class="subjects">${unit.subjects.filter((s) => !s.subjectID.includes('Freistunde')).map((s) => {
                             const course = s.courseID.includes('|') ? '' : s.courseID.split('-')[1].toLocaleUpperCase();
-                            return `<b>${s.subjectID}</b> ${course} ${s.teacherID.toUpperCase().length > 0 ? `(${s.teacherID.toUpperCase()})`
+                            return `${s.block} - <b>${s.subjectID}</b> ${course} ${s.teacherID.toUpperCase().length > 0 ? `(${s.teacherID.toUpperCase()})`
                                 : ''}`;
                         }).join('<br>')}</td>`;
                     }
