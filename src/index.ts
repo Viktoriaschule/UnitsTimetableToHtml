@@ -52,9 +52,9 @@ try {
                     const unit = line[j];
                     if (!unit) html += '<td></td>';
                     else {
-                        html += `<td class="subjects">${unit.subjects.filter((s) => !s.subjectID.includes('Freistunde')).map((s) => {
+                        html += `<td class="subjects">${unit.subjects.map((s) => {
                             const course = s.courseID.includes('|') ? '' : s.courseID.split('-')[1].toLocaleUpperCase();
-                            return `${s.block} - <b>${s.subjectID}</b> ${course} ${s.teacherID.toUpperCase().length > 0 ? `(${s.teacherID.toUpperCase()})`
+                            return `${s.block} - ${s.courseID} - <b>${s.subjectID}</b> ${course} ${s.teacherID.toUpperCase().length > 0 ? `(${s.teacherID.toUpperCase()})`
                                 : ''}`;
                         }).join('<br>')}</td>`;
                     }
